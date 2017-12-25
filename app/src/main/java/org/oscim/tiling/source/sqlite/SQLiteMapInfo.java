@@ -16,8 +16,14 @@ public class SQLiteMapInfo {
      */
     public final String name;
 
-    public SQLiteMapInfo(String name, BoundingBox boundingBox) {
+    /**
+     * The attribution of the map;
+     */
+    public final String attribution;
+
+    SQLiteMapInfo(String name, String attribution, BoundingBox boundingBox) {
         this.name = name;
+        this.attribution = attribution;
         this.boundingBox = boundingBox;
     }
 }

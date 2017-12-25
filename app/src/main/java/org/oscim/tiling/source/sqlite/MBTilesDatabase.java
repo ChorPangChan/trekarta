@@ -90,6 +90,10 @@ public class MBTilesDatabase extends SQLiteTileDatabase {
             if (format != null)
                 tileSource.setOption("format", format);
 
+            String attribution = getString(database, SQL_SELECT_PARAM, new String[]{"attribution"});
+            if (attribution != null)
+                tileSource.setOption("attribution", attribution);
+
             String schema = getString(database, SQL_SELECT_PARAM, new String[]{"tile_row_type"});
             boolean tmsSchema = schema == null || !("xyz".equals(schema) || "osm".equals(schema));
             tileSource.setOption("schema", tmsSchema ? "tms" : "xyz");

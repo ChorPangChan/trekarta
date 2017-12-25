@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import org.oscim.layers.tile.MapTile;
 import org.oscim.tiling.ITileDataSink;
 import org.oscim.tiling.ITileDataSource;
-import org.oscim.tiling.QueryResult;
 import org.oscim.tiling.source.ITileDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -157,7 +157,7 @@ public class SQLiteTileSource extends TileSource {
     }
 
     public SQLiteMapInfo getMapInfo() {
-        return new SQLiteMapInfo(options.get("name"), mBoundingBox);
+        return new SQLiteMapInfo(options.get("name"), options.get("attribution"), mBoundingBox);
     }
 
     private class BitmapTileDecoder implements ITileDecoder {

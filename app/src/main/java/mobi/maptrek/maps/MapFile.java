@@ -8,6 +8,7 @@ import org.oscim.tiling.TileSource;
 
 public class MapFile {
     public String name;
+    public String attribution;
     public BoundingBox boundingBox;
     public TileSource tileSource;
     public transient TileLayer tileLayer;

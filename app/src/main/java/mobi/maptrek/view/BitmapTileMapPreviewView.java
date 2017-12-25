@@ -160,13 +160,14 @@ public class BitmapTileMapPreviewView extends TextureView implements SurfaceText
         logger.debug("onSurfaceTextureDestroyed()");
 
         // Stop tile loader
+        mTileLoader.cancel();
         mTileLoader.pause();
         mTileLoader.finish();
         mTileLoader.dispose();
         try {
-            mTileLoader.join();
+            mTileLoader.join(100);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("Too slow join", e);
         }
         logger.debug("  loader stopped");
 
@@ -383,7 +384,8 @@ public class BitmapTileMapPreviewView extends TextureView implements SurfaceText
             try {
                 mTileSource.getDataSource().query(tile, this);
             } catch (Exception e) {
-                logger.error("{}: {}", tile, e.getMessage());
+                if (! this.isCanceled())
+                    logger.error("{}: {}", tile, e.getMessage());
                 return false;
             }
             return true;
@@ -427,10 +429,12 @@ public class BitmapTileMapPreviewView extends TextureView implements SurfaceText
         }
 
         void dispose() {
+            logger.debug("  dispose");
             mTileSource.getDataSource().dispose();
         }
 
         public void cancel() {
+            logger.debug("  cancel");
             mTileSource.getDataSource().cancel();
         }
 

@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
 import org.oscim.android.cache.TileCache;
+import org.oscim.core.BoundingBox;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,6 +60,23 @@ public class TileSourceFactory {
                 id = resources.getIdentifier(map + "_maxzoom", "integer", provider.activityInfo.packageName);
                 if (id != 0)
                     builder.zoomMax(resources.getInteger(id));
+
+                id = resources.getIdentifier(map + "_bounds", "string", provider.activityInfo.packageName);
+                if (id != 0) {
+                    String bounds = resources.getString(id);
+                    // left, bottom, right, top
+                    String[] edges = bounds.split(",\\s*");
+                    try {
+                        builder.bounds(new BoundingBox(
+                                Double.valueOf(edges[1]),
+                                Double.valueOf(edges[0]),
+                                Double.valueOf(edges[3]),
+                                Double.valueOf(edges[2])
+                        ));
+                    } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 OnlineTileSource source = builder.build();
                 if (useCache) {

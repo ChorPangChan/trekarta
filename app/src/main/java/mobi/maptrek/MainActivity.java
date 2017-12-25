@@ -972,23 +972,7 @@ public class MainActivity extends BasePluginActivity implements ILocationListene
         mMapView.onResume();
         updateLocationDrawable();
         adjustCompass(mMap.getMapPosition().bearing);
-
-        mLicense.setText(Html.fromHtml(getString(R.string.osmLicense)));
-        mLicense.setVisibility(View.VISIBLE);
-        final Message m = Message.obtain(mMainHandler, new Runnable() {
-            @Override
-            public void run() {
-                mLicense.animate().alpha(0f).setDuration(MAP_POSITION_ANIMATION_DURATION).setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        mLicense.setVisibility(View.GONE);
-                        mLicense.animate().setListener(null);
-                    }
-                });
-            }
-        });
-        m.what = R.id.msgRemoveLicense;
-        mMainHandler.sendMessageDelayed(m, 10000);
+        showLicense(getString(R.string.osmLicense));
 
         String userNotification = MapTrek.getApplication().getUserNotification();
         if (userNotification != null)
@@ -2976,6 +2960,7 @@ public class MainActivity extends BasePluginActivity implements ILocationListene
             if (mapFile == mBitmapLayerMap) {
                 showHideMapObjects(false);
                 mMap.updateMap(true);
+                showLicense(getString(R.string.osmLicense));
                 mBitmapLayerMap = null;
                 return;
             }
@@ -3087,6 +3072,8 @@ public class MainActivity extends BasePluginActivity implements ILocationListene
         else
             //TODO Bitmap layer should respond to update map (see TileLayer)
             mMap.clearMap();
+        if (mapFile.attribution != null)
+            showLicense(mapFile.attribution);
     }
 
     private void showActionPanel(boolean show, boolean animate) {
@@ -4145,6 +4132,25 @@ public class MainActivity extends BasePluginActivity implements ILocationListene
             mOsmcSymbolFactory.dispose();
             mMap.clearMap();
         }
+    }
+
+    private void showLicense(String license) {
+        mLicense.setText(Html.fromHtml(license));
+        mLicense.setVisibility(View.VISIBLE);
+        final Message m = Message.obtain(mMainHandler, new Runnable() {
+            @Override
+            public void run() {
+                mLicense.animate().alpha(0f).setDuration(MAP_POSITION_ANIMATION_DURATION).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mLicense.setVisibility(View.GONE);
+                        mLicense.animate().setListener(null);
+                    }
+                });
+            }
+        });
+        m.what = R.id.msgRemoveLicense;
+        mMainHandler.sendMessageDelayed(m, 10000);
     }
 
     private void setNightMode(final boolean night) {

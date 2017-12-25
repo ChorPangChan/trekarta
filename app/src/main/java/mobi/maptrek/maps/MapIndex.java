@@ -34,7 +34,6 @@ public class MapIndex implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(MapIndex.class);
 
     private static final long serialVersionUID = 1L;
-    private static final BoundingBox WORLD_BOUNDING_BOX = new BoundingBox(-85.0511d, -180d, 85.0511d, 180d);
 
     private final Context mContext;
     private HashSet<MapFile> mMaps;
@@ -83,6 +82,7 @@ public class MapIndex implements Serializable {
                 if (result.isSuccess()) {
                     SQLiteMapInfo info = tileSource.getMapInfo();
                     mapFile.name = info.name;
+                    mapFile.attribution = info.attribution;
                     mapFile.boundingBox = info.boundingBox;
                     mapFile.tileSource = tileSource;
                     tileSource.close();
@@ -116,7 +116,8 @@ public class MapIndex implements Serializable {
             for (OnlineTileSource tileSource : tileSources) {
                 MapFile mapFile = new MapFile(tileSource.getName());
                 mapFile.tileSource = tileSource;
-                mapFile.boundingBox = WORLD_BOUNDING_BOX;
+                mapFile.boundingBox = tileSource.getBoundingBox();
+                mapFile.attribution = tileSource.getLicense();
                 //TODO Implement tile cache expiration
                 //tileProvider.tileExpiration = onlineMapTileExpiration;
                 mMaps.add(mapFile);
